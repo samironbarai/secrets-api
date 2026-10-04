@@ -1,0 +1,17 @@
+{
+  "name": "secrets-api",
+  "version": "1.0.0",
+  "description": "Practice REST API for learning API authentication (none, basic, API key, bearer token)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

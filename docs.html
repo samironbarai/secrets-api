@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secrets API</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1f2328; --muted:#5b636d; --line:#e2ded5; --code:#f1eee7; --get:#1a7f4b; --post:#8a5a00; --put:#1f5fbf; --patch:#7a3fb3; --del:#b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16181c; --fg:#e7e9ec; --muted:#9aa3ad; --line:#2c3138; --code:#20242a; --get:#5fd08f; --post:#e0b252; --put:#7fb0ff; --patch:#c79cf2; --del:#ff8a80; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:40px 16px 80px; }
+  h1 { font-size:2rem; margin:0 0 8px; }
+  h2 { font-size:1.1rem; margin:40px 0 4px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  section { border-top:1px solid var(--line); padding:18px 0; }
+  .route { font:600 1rem ui-monospace, Menlo, monospace; overflow-wrap:anywhere; }
+  .m { display:inline-block; min-width:4.2em; }
+  .GET{color:var(--get)} .POST{color:var(--post)} .PUT{color:var(--put)} .PATCH{color:var(--patch)} .DELETE{color:var(--del)}
+  p { margin:6px 0; color:var(--muted); }
+  pre { background:var(--code); padding:12px; border-radius:6px; overflow-x:auto; font:.85rem/1.5 ui-monospace, Menlo, monospace; margin:8px 0 0; }
+  code { background:var(--code); padding:1px 5px; border-radius:4px; font-size:.9em; }
+</style>
+</head>
+<body>
+<main>
+<h1>Secrets API</h1>
+<p>A practice API for learning the four common kinds of API authentication. Share and read anonymous secrets, each with an embarrassment score from 0 to 10. Request bodies can be JSON or form-encoded.</p>
+
+<h2>Getting credentials</h2>
+<section><div class="route"><span class="m POST">POST</span>/register</div>
+<p>Registers a new user. Returns an error if the username is taken.</p>
+<pre>{ "username": "jackbauer", "password": "IAmTheBest" }
+→ { "success": "Successfully registered." }</pre></section>
+<section><div class="route"><span class="m GET">GET</span>/generate-api-key</div>
+<p>Generates a new API key.</p>
+<pre>→ { "apiKey": "generated-api-key" }</pre></section>
+<section><div class="route"><span class="m POST">POST</span>/get-auth-token</div>
+<p>Returns the bearer token for a registered user.</p>
+<pre>{ "username": "jackbauer", "password": "IAmTheBest" }
+→ { "token": "generated-auth-token" }</pre></section>
+
+<h2>No authentication</h2>
+<section><div class="route"><span class="m GET">GET</span>/random</div>
+<p>Returns one random secret.</p>
+<pre>→ { "id": "7", "secret": "...", "emScore": 3, "username": "user123", "timestamp": "2022-10-01T12:34:56Z" }</pre></section>
+
+<h2>Basic authentication</h2>
+<section><div class="route"><span class="m GET">GET</span>/all?page=1</div>
+<p>Returns all secrets, 10 per page. Send your registered username and password with HTTP Basic auth.</p></section>
+
+<h2>API key</h2>
+<section><div class="route"><span class="m GET">GET</span>/filter?score=5&amp;apiKey=YOUR_KEY</div>
+<p>Returns secrets with an embarrassment score of <code>score</code> or higher.</p></section>
+
+<h2>Bearer token</h2>
+<p>Send <code>Authorization: Bearer YOUR_TOKEN</code>. You can read any secret, and change or delete only your own.</p>
+<section><div class="route"><span class="m GET">GET</span>/user-secrets</div><p>Returns all secrets of the authenticated user.</p></section>
+<section><div class="route"><span class="m GET">GET</span>/secrets/{id}</div><p>Returns the secret with that ID.</p></section>
+<section><div class="route"><span class="m POST">POST</span>/secrets</div><p>Adds a new secret.</p>
+<pre>{ "secret": "This is a new secret.", "score": 3 }</pre></section>
+<section><div class="route"><span class="m PUT">PUT</span>/secrets/{id}</div><p>Replaces a secret. Both fields are required.</p>
+<pre>{ "secret": "Updated secret content.", "score": 5 }</pre></section>
+<section><div class="route"><span class="m PATCH">PATCH</span>/secrets/{id}</div><p>Updates one or both fields.</p>
+<pre>{ "score": 2 }</pre></section>
+<section><div class="route"><span class="m DELETE">DELETE</span>/secrets/{id}</div><p>Deletes a secret.</p>
+<pre>→ { "message": "Secret with ID 1 has been deleted successfully." }</pre></section>
+</main>
+</body>
+</html>
